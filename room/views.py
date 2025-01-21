@@ -1,17 +1,22 @@
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from .models import Room,Message
 from django.contrib.auth.models import User
+from .forms import RoomForm
+
 # Create your views here.
 @login_required
 def show_rooms(request):
-    rooms=Room.objects.filter(is_group=True)
+    rooms=Room.objects.filter(is_group=True , members=request.user)
     return render(request, 'rooms.html',{'rooms':rooms})
 @login_required
 def show_room(request,slug):
-    room=Room.objects.get(slug=slug)
-    messages=Message.objects.filter(room=room)
-    return render(request, 'room.html',{'room':room,'messages':messages})
+    print(slug)
+    if Room.objects.filter(slug=slug):
+        room=Room.objects.get(slug=slug)
+        messages=Message.objects.filter(room=room)
+        return render(request, 'room.html',{'room':room,'messages':messages})
+    return redirect('rooms')
 
 @login_required
 def all_users(request):
@@ -24,14 +29,30 @@ def contact(request, username):
     user2=request.user.username
     name=""
     if user1>user2:
-        name= str(user1) + str(user2)
+        name= str(user1)+"_" + str(user2)
     else:
-        name= str(user2) + str(user1)
+        name= str(user2)+"_" + str(user1)
     if not Room.objects.filter(slug=name):
         print("not exist")
         Room.objects.create(name=name, slug=name,is_group=False)
+        room=Room.objects.get(slug=name)
+        room.members.add(request.user)  # Add the logged-in user
+        room.members.add(User.objects.get(username=username))  # Add the specified user
         room=Room.objects.get(slug=name)
         messages=Message.objects.filter(room=room)[0:25]
     room=Room.objects.get(slug=name)
     messages=Message.objects.filter(room=room)[0:25]
     return render(request, 'room.html', {'room':room,'messages':messages})
+# @login_required
+    
+def create_room(request):
+    if request.method == "POST":
+        form = RoomForm(request.POST)
+        if form.is_valid():
+            room = form.save()
+            # Add selected users as members
+            room.members.set(form.cleaned_data['members'])
+            return redirect('rooms')  # Replace 'rooms' with the name of your rooms list URL
+    else:
+        form = RoomForm()
+    return render(request, 'create_room.html', {'form': form})
