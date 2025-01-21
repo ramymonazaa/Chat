@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Create your views here.
 from .forms import SignUpForm
 from django.contrib.auth.decorators import login_required
+from room.models import Room,Message
 def frontpage(request):
     users=User.objects.exclude(username=request.user.username)
     if request.user.is_authenticated:
