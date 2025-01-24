@@ -17,7 +17,7 @@ Prerequisites
   - Python 3.9+
   - Django 4.0+
 Steps to Set Up
-  - git clone https://github.com/your-username/chat-website.git
+  - git clone (https://github.com/ramymonazaa/Chat.git)
   - cd chat-website
   - python -m venv venv
   - source venv/bin/activate  # On Windows: venv\Scripts\activate
