@@ -1,4 +1,4 @@
-A basic chat application built with Django that provides real-time communication and user interaction. 
+A basic chat site built with Django that provides real-time communication and user interaction. 
 This project serves as a foundation for a chat platform and is currently under development, with plans to add new features in the future.
 Features:
 
