@@ -47,11 +47,14 @@ def contact(request, username):
     
 def create_room(request):
     if request.method == "POST":
-        form = RoomForm(request.POST)
+        form = RoomForm(request.POST, user=request.user)
         if form.is_valid():
             room = form.save()
             # Add selected users as members
             room.members.set(form.cleaned_data['members'])
+            room.members.add(request.user)
+            room.slug=str(room.id)
+            room.save()
             return redirect('rooms')  # Replace 'rooms' with the name of your rooms list URL
     else:
         form = RoomForm()

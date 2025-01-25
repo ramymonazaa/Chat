@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Alerts | {% endblock %}
+
+{% block content %}
+<div class="p-10 lg:p-20 text-center">
+    <h1 class="text-3xl lg:text-6xl text-white">Alerts</h1>
+
+    {% if flag == 1 %}
+        <div class="mt-10 p-4 text-white bg-green-600 rounded-lg">
+            <strong>Success:</strong> The room model class has been modified successfully.
+        </div>
+    {% elif flag == 2 %}
+        <div class="mt-10 p-4 text-white bg-blue-600 rounded-lg">
+            <strong>Success:</strong> A new user has been added successfully.
+        </div>
+    {% else %}
+        <div class="mt-10 p-4 text-gray-200 bg-gray-800 rounded-lg">
+            <strong>Notice:</strong> No recent updates.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
